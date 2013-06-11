@@ -2,6 +2,9 @@ import requests
 from lxml import html
 import time
 
+class NoResultsException(Exception):
+    pass
+
 
 def search(keywords, max_results=None):
     url = 'http://duckduckgo.com/html/'
@@ -12,8 +15,8 @@ def search(keywords, max_results=None):
 
     yielded = 0
     while True:
-        res = requests.post(url, data=params)
-        doc = html.fromstring(res.text)
+        res = requests.post(url, params=params)
+        doc = html.fromstring(res.content)
 
         results = [a.get('href') for a in
                    doc.cssselect('#links .links_main a')]
